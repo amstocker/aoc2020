@@ -18,28 +18,6 @@ const std::vector<string> eye_colors = {
 };
 
 
-void print_passport(std::map<string, string> p) {
-    std::map<string, string>::iterator it;
-    std::cout << '{';
-    for (string field: required_fields) {
-        it = p.find(field);
-        if (it != p.end()) {
-            std::cout << field << ": " << p[field] << ", ";
-        } else {
-            std::cout << field << ": NONE, ";
-        }
-    }
-    for (string field: optional_fields) {
-        it = p.find(field);
-        if (it != p.end()) {
-            std::cout << field << ": " << it->second << ", ";
-        } else {
-            std::cout << field << ": NONE, ";
-        }
-    }
-    std::cout << '}' << std::endl;
-}
-
 bool check_next_line(ifstream *file) {
     if (!file->is_open()) {
         return false;
@@ -88,6 +66,7 @@ bool is_valid2(std::map<string, string> p) {
         if (eyr < 2020 || eyr > 2030) return false;
         if (std::regex_search(hgt, matches, hgt_pattern)) {
             int h = std::stoi(matches[1]);
+            if (hgt.size() != matches.str(0).size()) return false;
             if ((matches[2] == "cm") && (h < 150 || h > 193)) return false;
             if ((matches[2] == "in") && (h < 59 || h > 76)) return false;
         } else {
