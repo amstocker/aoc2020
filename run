@@ -1,1 +1,1 @@
-gcc $1.cpp -lstdc++ && ./a.out
+g++ $1.cpp && ./a.out
