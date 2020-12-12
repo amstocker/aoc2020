@@ -1,7 +1,7 @@
 from functools import lru_cache
 
 with open("day10_input.txt") as f:
-    data = sorted([int(x) for x in f.read().split()] + [0])
+    data = [0] + sorted([int(x) for x in f.read().split()])
 
 
 @lru_cache(maxsize=None)
