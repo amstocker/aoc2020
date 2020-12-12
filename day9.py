@@ -25,5 +25,3 @@ for i in range(len(data)):
     for j in range(2, len(data) - i):
         if sum(data[i:i + j]) == n:
             print(min(data[i:i + j]) + max(data[i:i + j]))
-
-
