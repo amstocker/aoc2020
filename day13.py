@@ -1,36 +1,27 @@
+from functools import reduce
+from math import gcd
+
 with open("day13_input.txt") as f:
     tmp = f.read().split()
     t0 = int(tmp[0])
-    bus_lines = list(enumerate([1 if s == 'x' else int(s) for s in tmp[1].split(',')]))
+    bus_lines = enumerate([1 if s == 'x' else int(s) for s in tmp[1].split(',')])
+
+# congruence equations
+crt = [(-i % b, b) for i, b in bus_lines if b > 1]
 
 
-# print input for WolframAlpha:
-#   ChineseRemainder[{0, 34, 920, 4, 6, 12, 349, 20, 9}, {17, 41, 937, 13, 23, 29, 397, 37, 19}]
-#       = 626670513163231
-s = "ChineseRemainder[{}, {}]"
-s1 = "{"
-s2 = "{"
-for i, b in bus_lines:
-    if b > 1:
-        s1 += "{}, ".format((b - i) % b)
-        s2 += "{}, ".format(b)
-s1 = s1[:-2] + "}"
-s2 = s2[:-2] + "}"
-print(s.format(s1, s2))
+# solve for least solution of
+#   x = y0 (mod a0)
+#   x = y1 (mod a1)
+# assuming 0 <= y0 < a0, 0 <= y1 < a1.
+def solve_least_congruence(t0, t1):
+    y0, a0 = t0
+    y1, a1 = t1
+    x = y0
+    while True:
+        if x % a1 == y1:
+            lcm = (a0 * a1) // gcd(a0, a1)
+            return (x, lcm)
+        x += a0
 
-
-p = sorted(bus_lines, key=lambda p: -p[1])
-
-# Part 2
-t = p[0][1] - p[0][0]
-inc = p[0][1]
-while True:
-    if (t % 1000000 == 0):
-        print(t)
-    for i, b in bus_lines:
-        if (t + i) % b != 0:
-            break
-    else:
-        break
-    t += inc
-print(t)
+print(reduce(solve_least_congruence, crt)[0])
