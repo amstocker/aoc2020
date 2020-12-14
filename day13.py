@@ -4,16 +4,15 @@ from math import gcd
 with open("day13_input.txt") as f:
     tmp = f.read().split()
     t0 = int(tmp[0])
-    bus_lines = enumerate([1 if s == 'x' else int(s) for s in tmp[1].split(',')])
+    bus_lines = enumerate([s if s == 'x' else int(s) for s in tmp[1].split(',')])
 
 # congruence equations
-crt = [(-i % b, b) for i, b in bus_lines if b > 1]
+crt = [(-i % b, b) for i, b in bus_lines if b != 'x']
 
 
 # solve for least solution of
 #   x = y0 (mod a0)
 #   x = y1 (mod a1)
-# assuming 0 <= y0 < a0, 0 <= y1 < a1.
 def solve_least_congruence(t0, t1):
     y0, a0 = t0
     y1, a1 = t1
