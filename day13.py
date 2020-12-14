@@ -6,8 +6,7 @@ with open("day13_input.txt") as f:
 
 # print input for WolframAlpha:
 #   ChineseRemainder[{0, 34, 920, 4, 6, 12, 349, 20, 9}, {17, 41, 937, 13, 23, 29, 397, 37, 19}]
-#   returns...
-#   
+#       = 626670513163231
 s = "ChineseRemainder[{}, {}]"
 s1 = "{"
 s2 = "{"
