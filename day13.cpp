@@ -41,31 +41,5 @@ int main() {
         t += 1;
     }
 
-    // Part 2
-    int m = 0, mi;
-    for (int i = 0; i < bus_lines.size(); i++) {
-        if (bus_lines[i] > m) {
-            m = bus_lines[i];
-            mi = i;
-        }
-    }
-
-    t = m - mi;
-    found = false;
-    bool valid;
-    int b;
-    while (!found) {
-        valid = true;
-        for (int i = 0; i < bus_lines.size(); i++) {
-            b = bus_lines[i];
-            if ((t + i) % b != 0) {
-                valid = false;
-                break;
-            }
-        }
-        t += m;
-        if (!valid) continue;
-        found = true;
-        cout << t - m << endl;
-    }
+    // Part 2 (see `day13.py`)
 }
