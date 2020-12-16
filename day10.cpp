@@ -6,9 +6,9 @@
 using namespace std;
 
 
-int arrangements_helper (int d, int i, map<int, int>& arrangement_counts, vector<int> const& data) {
+long int arrangements_helper (int d, int i, map<int, long int>& arrangement_counts, vector<int> const& data) {
     int j;
-    int arrangements;
+    long int arrangements;
     if (arrangement_counts.find(i) != arrangement_counts.end()) {
         return arrangement_counts.at(i);
     } else {
@@ -18,13 +18,13 @@ int arrangements_helper (int d, int i, map<int, int>& arrangement_counts, vector
             arrangements += arrangements_helper(d + 1, j, arrangement_counts, data);
             j--;
         }
-        arrangement_counts[i] = arrangements;
     }
+    arrangement_counts[i] = arrangements;
     return arrangements;
 }
 
-int count_arrangements(vector<int> const& data) {
-    map<int, int> arrangement_counts;
+long int count_arrangements(vector<int> const& data) {
+    map<int, long int> arrangement_counts;
     arrangement_counts[0] = 1;
     
     return arrangements_helper(0, data.size() - 1, arrangement_counts, data);
