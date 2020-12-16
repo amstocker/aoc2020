@@ -55,6 +55,5 @@ int main() {
     cout << diff1 * diff3 << endl;
 
     // Part 2
-    //      (Doesn't actually work if input is too large...)
     cout << count_arrangements(data) << endl;
 }

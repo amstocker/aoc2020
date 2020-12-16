@@ -5,6 +5,15 @@
 using namespace std;
 
 
+long int gcd(long int a, long int b) {
+  if (b == 0) return a;
+  return gcd(b, a % b);
+}
+ 
+long int lcm(long int a, long int b) {
+    return (a / gcd(a, b)) * b;
+}
+
 int main() {
     ifstream file ("day13_input.txt");
     if (!file.is_open()) return 1;
@@ -20,11 +29,8 @@ int main() {
     getline(file, line);
     stringstream ss (line);
     while (getline(ss, part, ',')) {
-        if (part == "x") {
-            bus_lines.push_back(1);
-        } else {
-            bus_lines.push_back(stoi(part));
-        }
+        if (part == "x") bus_lines.push_back(1);
+        else bus_lines.push_back(stoi(part));
     }
 
     // Part 1
