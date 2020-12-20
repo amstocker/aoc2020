@@ -2,52 +2,92 @@ with open("day19_input.txt") as f:
     tmp = f.read()
     tmp = tmp.split('\n\n')
 
+strings = tmp[1].strip().split('\n')
 rules = {}
+terminal_rules = {}
+max_ruleno = 0
 for line in tmp[0].split('\n'):
     ruleno = int(line[:line.index(':')])
+    max_ruleno = max(max_ruleno, ruleno)
     if '"' in line:
         i = line.index('"')
-        rules[ruleno] = str(line[i + 1:i + 2])
+        c = line[i + 1:i + 2]
+        rules[ruleno] = c
+        terminal_rules[ruleno] = c
         continue
-    tmp2 = map(lambda s: s.strip().split(), line[line.index(':') + 1:].split('|'))
     subrules = []
-    for t in tmp2:
+    for t in map(lambda s: s.strip().split(), line[line.index(':') + 1:].split('|')):
         subrules.append(tuple(map(int, t)))
     rules[ruleno] = subrules
 
 
-valid_substrings = set([])
-invalid_substrings = set([])
-def process(s, ruleno):
-    if (s, ruleno) in valid_substrings:
-        return True
-    if (s, ruleno) in invalid_substrings:
-        return False
-    rule = rules[ruleno]
-    if type(rule) == str:
-        if s == rule:
-            valid_substrings.add((s, ruleno))
+
+# generates lexicographically ordered tuples of the form
+#   (i_0, i_1, ..., i_n)
+# where
+#   a = i_0 < i_1 < ... < i_n = b
+def partitions(a, b, n, t = ()):
+    if t == ():
+        yield from partitions(a + 1, b, n, t = (a,))
+    elif n == 1:
+        yield t + (b,)
+    else:
+        for i in range(a, b):
+            yield from partitions(i + 1, b, n - 1, t = t + (i,))
+
+# yields generators of partitions of s into n substrings
+def string_partitions(s, n):
+    for t in partitions(0, len(s), n):
+        yield (s[t[i]:t[i+1]] for i in range(n))
+
+
+# caches results of `process`
+_valid = set()
+_invalid = set()
+def reset_cached():
+    global _valid
+    global _invalid
+    _valid = set(terminal_rules.items())
+    _invalid = set()
+
+def cache_valid_and_invalid(f):
+    def decorated(*args):
+        if args in _valid:
             return True
-        invalid_substrings.add((s, ruleno))
+        if args in _invalid:
+            return False
+        if f(*args):
+            _valid.add(args)
+            return True
+        _invalid.add(args)
         return False
-    maybes = []
-    for t in rule:
-        if len(t) == 1:
-            maybes.append(process(s, t[0]))
-        elif len(t) == 2:
-            for i in range(1, len(s)):
-                maybes.append(process(s[:i], t[0]) and process(s[i:], t[1]))
-    if any(maybes):
-        valid_substrings.add((s, ruleno))
-        return True
-    invalid_substrings.add((s, ruleno))
-    return False
+    return decorated
+
+@cache_valid_and_invalid
+def process(ruleno, string):
+    if type(ruleno) == str:
+        return False
+    return any(
+        all(process(r, s) for r, s in zip(subrules, partition)) \
+            for subrules in rules[ruleno] \
+            for partition in string_partitions(string, len(subrules)) 
+    )
 
 
 # Part 1
+reset_cached()
 count = 0
-for s in tmp[1].split('\n'):
-    print(s)
-    if process(s, 0):
+for s in strings:
+    if process(0, s):
+        count += 1
+print(count)
+
+# Part 2
+rules[8] = [(42,), (42, 8)]
+rules[11] = [(42, 31), (42, 11, 31)]
+reset_cached()
+count = 0
+for s in strings:
+    if process(0, s):
         count += 1
 print(count)
