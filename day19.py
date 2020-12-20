@@ -44,7 +44,7 @@ def string_partitions(s, n):
 # caches results of `process`
 _valid = set()
 _invalid = set()
-def reset_cached():
+def reset_cache():
     global _valid
     global _invalid
     _valid = set(terminal_rules.items())
@@ -68,14 +68,14 @@ def process(ruleno, string):
     if type(ruleno) == str:
         return False
     return any(
-        all(process(r, s) for r, s in zip(subrules, partition)) \
-            for subrules in rules[ruleno] \
+        all(process(r, s) for r, s in zip(subrules, partition))
+            for subrules in rules[ruleno]
             for partition in string_partitions(string, len(subrules)) 
     )
 
 
 # Part 1
-reset_cached()
+reset_cache()
 count = 0
 for s in strings:
     if process(0, s):
@@ -85,7 +85,7 @@ print(count)
 # Part 2
 rules[8] = [(42,), (42, 8)]
 rules[11] = [(42, 31), (42, 11, 31)]
-reset_cached()
+reset_cache()
 count = 0
 for s in strings:
     if process(0, s):
