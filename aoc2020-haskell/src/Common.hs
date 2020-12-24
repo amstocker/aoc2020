@@ -2,31 +2,32 @@ module Common
     ( runDay
     ) where
 
-import Day13
-import Day19
+import Data.List
 
+import qualified Day13
+import qualified Day19
 
-type Day = Integer
+type DayNumber = Integer
+data Day = Day
+    { dayNumber :: DayNumber
+    , run :: String -> IO ()
+    }
 
-dayList :: [(Day, String -> IO ())]
+dayList :: [Day]
 dayList =
-    [ (13, Day13.run)
-    , (19, Day19.run)
+    [ Day 13 Day13.run
+    , Day 19 Day19.run
     ]
 
 
 inputDirectory :: FilePath
 inputDirectory = "../"
 
-inputFilename :: Day -> FilePath
+inputFilename :: DayNumber -> FilePath
 inputFilename n = inputDirectory ++ "day" ++ show n ++ "_input.txt"
 
-errorMsg :: Day -> String
-errorMsg n = "Day " ++ show n ++ " not completed yet ..."
-
-runDay :: Day -> IO ()
+runDay :: DayNumber -> IO ()
 runDay n = do
     contents <- readFile $ inputFilename n
-    case lookup n dayList of
-        Just run -> run contents
-        Nothing -> putStrLn $ errorMsg n
+    case find ((== n) . dayNumber) dayList of
+        Just (Day _ run) -> run contents
