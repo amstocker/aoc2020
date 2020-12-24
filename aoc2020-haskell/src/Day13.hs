@@ -3,35 +3,33 @@ module Day13 (run) where
 import Data.Char
 import Utils
 
--- Represents a congruence
---      y `mod` a
--- as a tuple (y, a)
-type Congruence = (Integer, Integer)
+-- An element x in the group Z/nZ represented as a tuple (x, n)
+type CyclicElem = (Integer, Integer)
 
--- Solves the system of equations
---      x = y0 `mod` a0
---      x = y1 `mod` a1
--- and returns the congruence (x, lcm(a0, a1))
-solveCongruence :: Congruence -> Congruence -> Congruence
-solveCongruence (y0, a0) (y1, a1)
-    | y0 `mod` a1 == y1 = (y0, lcm a0 a1)
-    | otherwise         = solveCongruence (y0 + a0, a0) (y1, a1)
+-- Given elements (x1, n1) and (x2, n2) where n1 and n2 are coprime,
+-- computes the isomorphism
+--      Z/(n1)Z + Z/(n2)Z -> Z/(n1*n2)Z
+cyclicIso :: CyclicElem -> CyclicElem -> CyclicElem
+cyclicIso (x1, n1) (x2, n2)
+    | x1 `mod` n2 == x2 = (x1, n1 * n2)
+    | otherwise         = cyclicIso (x1 + n1, n1) (x2, n2)
 
--- Solves the system of equations
---      x = y0 `mod` a0
+-- Solves the system of K equations
+--      x = x1 `mod` n1
 --      ...
---      x = yN `mod` aN
-solveCongruences :: [Congruence] -> Integer
-solveCongruences = fst . foldl1 solveCongruence
+--      x = xK `mod` nK
+-- where n1, ..., nK are coprime.
+solver :: [CyclicElem] -> Integer
+solver = fst . foldl1 cyclicIso
 
-parseLine :: String -> [Congruence]
+parseLine :: String -> [CyclicElem]
 parseLine = 
-    let pairToCongruence = \(i, x) -> ((-i) `mod` x, x)
+    let pairToCyclicElem = \(i, x) -> ((-i) `mod` x, x)
         readPair = \(i, s) -> (i, read s)
         clean = filter (all isNumber . snd)
-    in map (pairToCongruence . readPair) . clean . enumerated
+    in map (pairToCyclicElem . readPair) . clean . enumeratedItems
     where
-        enumerated = zip [1..] . splitByCommas
+        enumeratedItems = zip [1..] . splitByCommas
 
 run :: String -> IO ()
-run = putStrLn . show . solveCongruences . parseLine . (!!1) . lines
+run = putStrLn . show . solver . parseLine . (!!1) . lines
