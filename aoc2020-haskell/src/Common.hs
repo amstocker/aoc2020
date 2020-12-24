@@ -3,20 +3,30 @@ module Common
     ) where
 
 import Day13
--- import Day19
--- etc...
+import Day19
 
-dayMap = [ (13, Day13.run) ]
+
+type Day = Integer
+
+dayList :: [(Day, String -> IO ())]
+dayList =
+    [ (13, Day13.run)
+    , (19, Day19.run)
+    ]
 
 
 inputDirectory :: FilePath
 inputDirectory = "../"
 
-inputFilename :: Integer -> FilePath
+inputFilename :: Day -> FilePath
 inputFilename n = inputDirectory ++ "day" ++ show n ++ "_input.txt"
 
-runDay :: Integer -> IO ()
+errorMsg :: Day -> String
+errorMsg n = "Day " ++ show n ++ " not completed yet ..."
+
+runDay :: Day -> IO ()
 runDay n = do
     contents <- readFile $ inputFilename n
-    let (Just run) = lookup n dayMap
-    run contents
+    case lookup n dayList of
+        Just run -> run contents
+        Nothing -> putStrLn $ errorMsg n
