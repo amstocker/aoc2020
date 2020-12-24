@@ -12,7 +12,7 @@ dayMap = [ (13, Day13.run) ]
 inputDirectory :: FilePath
 inputDirectory = "../"
 
-inputFilename :: Integer -> String
+inputFilename :: Integer -> FilePath
 inputFilename n = inputDirectory ++ "day" ++ show n ++ "_input.txt"
 
 runDay :: Integer -> IO ()
