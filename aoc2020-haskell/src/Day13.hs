@@ -1,7 +1,9 @@
-module Day13 (run) where
+module Day13
+    ( run
+    ) where
 
 import Data.Char
-import Utils
+import qualified Utils
 
 -- An element x in the group Z/nZ represented as a tuple (x, n)
 type CyclicElem = (Integer, Integer)
@@ -29,7 +31,7 @@ parseLine =
         clean = filter (all isNumber . snd)
     in map (pairToCyclicElem . readPair) . clean . enumeratedItems
     where
-        enumeratedItems = zip [1..] . splitByCommas
+        enumeratedItems = zip [1..] . Utils.splitByComma
 
 run :: String -> IO ()
-run = putStrLn . show . solver . parseLine . (!!1) . lines
+run = print . solver . parseLine . (!! 1) . lines

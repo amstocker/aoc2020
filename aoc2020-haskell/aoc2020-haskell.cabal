@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 44a3e731c653e5229d8582d1d0d8329174819f64bb8d813fdc9f5631c3d03c57
+-- hash: c1a981d188a7ed8ecae347ccfeee709e0dd75a708430c84a90fb5823f7a84f04
 
 name:           aoc2020-haskell
 version:        0.1.0.0
@@ -37,6 +37,7 @@ library
       src
   build-depends:
       base >=4.7 && <5
+    , containers
   default-language: Haskell2010
 
 executable aoc2020-haskell-exe
@@ -49,6 +50,7 @@ executable aoc2020-haskell-exe
   build-depends:
       aoc2020-haskell
     , base >=4.7 && <5
+    , containers
   default-language: Haskell2010
 
 test-suite aoc2020-haskell-test
@@ -62,4 +64,5 @@ test-suite aoc2020-haskell-test
   build-depends:
       aoc2020-haskell
     , base >=4.7 && <5
+    , containers
   default-language: Haskell2010
