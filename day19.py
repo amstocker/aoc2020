@@ -5,10 +5,8 @@ with open("day19_input.txt") as f:
 strings = tmp[1].strip().split('\n')
 rules = {}
 terminal_rules = {}
-max_ruleno = 0
 for line in tmp[0].split('\n'):
     ruleno = int(line[:line.index(':')])
-    max_ruleno = max(max_ruleno, ruleno)
     if '"' in line:
         i = line.index('"')
         c = line[i + 1:i + 2]
@@ -74,20 +72,22 @@ def process(ruleno, string):
     )
 
 
-# Part 1
-reset_cache()
-count = 0
-for s in strings:
-    if process(0, s):
-        count += 1
-print(count)
+if __name__ == "__main__":
 
-# Part 2
-rules[8] = [(42,), (42, 8)]
-rules[11] = [(42, 31), (42, 11, 31)]
-reset_cache()
-count = 0
-for s in strings:
-    if process(0, s):
-        count += 1
-print(count)
+    # Part 1
+    reset_cache()
+    count = 0
+    for s in strings:
+        if process(0, s):
+            count += 1
+    print(count)
+
+    # Part 2
+    rules[8] = [(42,), (42, 8)]
+    rules[11] = [(42, 31), (42, 11, 31)]
+    reset_cache()
+    count = 0
+    for s in strings:
+        if process(0, s):
+            count += 1
+    print(count)
